@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" href="./style.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1>Chat</h1>
+        
+        <div id="chat-messages">
+            {{#each messages}}
+                <div class="message">
+                    <strong>{{this.user}}:</strong> {{this.message}}
+                </div>
+            {{/each}}
+        </div>
+
+        <form id="message-form">
+            <input type="text" id="user" placeholder="Nombre de usuario">
+            <input type="text" id="message" placeholder="Mensaje">
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
