@@ -7,12 +7,19 @@ import { createInventory, findInventory } from './dao/inventory.js';
 import { createTransactions, findTransactions } from './dao/transactions.js';
 import { messages } from './messages.js'; 
 import { createProduct, findProducts } from './product.js';
+import express from 'express';
+import authRoutes from './authRoutes.js';
 
 dotenv.config();
 
-const app = express();
-app.use(express.json());
 
+const app = express();
+
+app.use(express.json());
+app.use('/auth', authRoutes);
+app.listen(3000, () => {
+  console.log('Servidor iniciado en el puerto 3000');
+});
 
 app.get('/client/:id', async (req, res) => {
   try {
