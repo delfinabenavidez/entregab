@@ -9,11 +9,14 @@ import { messages } from './messages.js';
 import { createProduct, findProducts } from './product.js';
 import express from 'express';
 import authRoutes from './authRoutes.js';
+import { spawn } from 'child_process';
 
 dotenv.config();
 
 
 const app = express();
+app.use('/auth', spawn('node', ['authRoutes.js']));
+
 
 app.use(express.json());
 app.use('/auth', authRoutes);
