@@ -2,10 +2,10 @@ const express = require('express');
 const app = express();
 const mockingModule = require('./mockingModule');
 const errorHandler = require('./errorHandler');
-const logger = require('./logger');
+const loggerMiddleware = require('./loggerMiddleware');
 
-app.use(logger);
 app.use(express.json());
+app.use(loggerMiddleware);
 
 app.get('/mockingproducts', (req, res) => {
   res.json(mockingModule.getMockingProducts());
