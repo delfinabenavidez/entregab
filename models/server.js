@@ -3,6 +3,9 @@ const app = express();
 const mockingModule = require('./mockingModule');
 const errorHandler = require('./errorHandler');
 const loggerMiddleware = require('./loggerMiddleware');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
 
 app.use(express.json());
 app.use(loggerMiddleware);
@@ -20,6 +23,8 @@ app.post('/products', (req, res) => {
   }
   res.json(product);
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(errorHandler.errorHandler);
 
