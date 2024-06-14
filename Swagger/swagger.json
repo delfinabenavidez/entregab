@@ -1,137 +1,147 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "title": "My API",
-      "version": "1.0.0"
+  "swagger": "2.0",
+  "info": {
+    "title": "My API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/products": {
+      "get": {
+        "summary": "Get all products",
+        "description": "Returns a list of all products",
+        "responses": {
+          "200": {
+            "description": "A list of products"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new product",
+        "description": "Creates a new product",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "product",
+            "description": "The product to create",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The created product"
+          }
+        }
+      }
     },
-    "paths": {
-      "/products": {
-        "get": {
-          "summary": "Get all products",
-          "description": "Returns a list of all products",
-          "responses": {
-            "200": {
-              "description": "A list of products"
-            }
+    "/products/{id}": {
+      "get": {
+        "summary": "Get a product by ID",
+        "description": "Returns a product by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the product",
+            "required": true,
+            "type": "string"
           }
-        },
-        "post": {
-          "summary": "Create a new product",
-          "description": "Creates a new product",
-          "parameters": [
-            {
-              "in": "body",
-              "name": "product",
-              "description": "The product to create",
-              "schema": {
-                "$ref": "#/definitions/Product"
-              }
-            }
-          ],
-          "responses": {
-            "201": {
-              "description": "The created product"
-            }
+        ],
+        "responses": {
+          "200": {
+            "description": "The product"
           }
         }
       },
-      "/products/{id}": {
-        "get": {
-          "summary": "Get a product by ID",
-          "description": "Returns a product by ID",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "description": "The ID of the product",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "The product"
-            }
-          }
-        },
-        "put": {
-          "summary": "Update a product by ID",
-          "description": "Updates a product by ID",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "description": "The ID of the product",
-              "required": true,
-              "type": "string"
-            },
-            {
-              "in": "body",
-              "name": "product",
-              "description": "The updated product",
-              "schema": {
-                "$ref": "#/definitions/Product"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "The updated product"
+      "put": {
+        "summary": "Update a product by ID",
+        "description": "Updates a product by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the product",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "product",
+            "description": "The updated product",
+            "schema": {
+              "$ref": "#/definitions/Product"
             }
           }
-        },
-        "delete": {
-          "summary": "Delete a product by ID",
-          "description": "Deletes a product by ID",
-          "parameters": [
-            {
-              "in": "path",
-              "name": "id",
-              "description": "The ID of the product",
-              "required": true,
-              "type": "string"
-            }
-          ],
-          "responses": {
-            "204": {
-              "description": "The product was deleted"
-            }
+        ],
+        "responses": {
+          "200": {
+            "description": "The updated product"
           }
         }
       },
-      "/cart": {
-        "get": {
-          "summary": "Get the cart",
-          "description": "Returns the cart",
-          "responses": {
-            "200": {
-              "description": "The cart"
+      "delete": {
+        "summary": "Delete a product by ID",
+        "description": "Deletes a product by ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the product",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The product was deleted"
+          }
+        }
+      }
+    },
+    "/cart": {
+      "get": {
+        "summary": "Get the cart",
+        "description": "Returns the cart",
+        "responses": {
+          "200": {
+            "description": "The cart"
+          }
+        }
+      },
+      "post": {
+        "summary": "Add a product to the cart",
+        "description": "Adds a product to the cart",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "product",
+            "description": "The product to add to the cart",
+            "schema": {
+              "$ref": "#/definitions/Product"
             }
           }
-        },
-        "post": {
-          "summary": "Add a product to the cart",
-          "description": "Adds a product to the cart",
-          "parameters": [
-            {
-              "in": "body",
-              "name": "product",
-              "description": "The product to add to the cart",
-              "schema": {
-                "$ref": "#/definitions/Product"
-              }
-            }
-          ],
-          "responses": {
-            "201": {
-              "description": "The product was added to the cart"
+        ],
+        "responses": {
+          "201": {
+            "description": "The product was added to the cart"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a product from the cart",
+        "description": "Deletes a product from the cart",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "productId",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
           }
-        },
-        "delete": {
-          "summary": "Delete a product from the cart",
-          "description": "Deletes a product from the cart",
-          "parameters": [
-            {
-              "in": "body",
-              "name":
+        ]
+      }
+    }
+  }
+}
