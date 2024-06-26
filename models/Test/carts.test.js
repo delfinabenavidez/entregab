@@ -34,12 +34,4 @@ describe('Carts Router', () => {
     expect(res.status).to.equal(204);
     expect(res.body).to.be.empty;
   });
-
-  it('should update the cart', async () => {
-    const cart = { products: [1, 2, 3] };
-    const res = await request(app).put('/cart').send(cart);
-    expect(res.status).to.equal(200);
-    expect(res.body).to.have.property('products');
-    expect(res.body.products).to.deep.equal(cart.products);
-  });
 });

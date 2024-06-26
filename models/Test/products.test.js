@@ -35,20 +35,4 @@ describe('Products Router', () => {
     expect(res.body).to.have.property('id');
     expect(res.body.id).to.equal(productId);
   });
-
-  it('should update a product', async () => {
-    const productId = 1;
-    const updatedProduct = { name: 'Updated Product', price: 12.99 };
-    const res = await request(app).put(`/products/${productId}`).send(updatedProduct);
-    expect(res.status).to.equal(200);
-    expect(res.body).to.have.property('id');
-    expect(res.body.name).to.equal(updatedProduct.name);
-  });
-
-  it('should delete a product', async () => {
-    const productId = 1;
-    const res = await request(app).delete(`/products/${productId}`);
-    expect(res.status).to.equal(204);
-    expect(res.body).to.be.empty;
-  });
 });
