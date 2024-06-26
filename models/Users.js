@@ -1,3 +1,4 @@
+// models/user.model.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -8,13 +9,21 @@ const userSchema = new mongoose.Schema({
   age: { type: Number, required: true },
   password: { type: String, required: true },
   cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart' },
-  role: { type: String, default: 'user' }
+  role: { type: String, default: 'user' },
+  documents: [
+    {
+      name: String,
+      reference: String
+    }
+  ],
+  last_connection: Date
 });
 
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
   const hash = await bcrypt.hash(this.password, 10);
   this.password = hash;
+  next();
 });
 
 userSchema.methods.comparePassword = function(candidatePassword, cb) {
@@ -25,5 +34,4 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 };
 
 const User = mongoose.model('User', userSchema);
-
 module.exports = User;
