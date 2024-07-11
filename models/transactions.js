@@ -1,19 +1,23 @@
 import { createClient } from '../client.js';
 
-export const getTransactionCollection = async () => {
-  const client = await createClient();
-  const db = client.db('mdSportsWearDatabase');
-  return db.collection('transactions');
-};
+class TransactionRepository {
+  async getCollection() {
+    const client = await createClient();
+    const db = client.db('mdSportsWearDatabase');
+    return db.collection('transactions');
+  }
 
-export const createTransactions = async ({ customerId, inventoryId, date }) => {
-  const transactionCollection = await getTransactionCollection();
-  await transactionCollection.insertOne({ customerId, inventoryId, date });
-  return { customerId, inventoryId, date };
-};
+  async createTransaction({ customerId, inventoryId, date }) {
+    const collection = await this.getCollection();
+    await collection.insertOne({ customerId, inventoryId, date });
+    return { customerId, inventoryId, date };
+  }
 
-export const findTransactions = async () => {
-  const transactionCollection = await getTransactionCollection();
-  const transactions = await transactionCollection.find({}).toArray();
-  return transactions;
-};
+  async findTransactions() {
+    const collection = await this.getCollection();
+    const transactions = await collection.find({}).toArray();
+    return transactions;
+  }
+}
+
+export const transactionRepository = new TransactionRepository();
