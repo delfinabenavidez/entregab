@@ -4,6 +4,7 @@ class TransactionRepository {
   client;
   db;
   collection;
+  usersCollection;
 
   constructor() {
     this.init();
@@ -13,9 +14,13 @@ class TransactionRepository {
     this.client = await createClient();
     this.db = this.client.db('mdSportsWearDatabase');
     this.collection = this.db.collection('transactions');
+    this.usersCollection = this.db.collection('users');
   }
 
   async createTransaction({ customerId, inventoryId, date }) {
+    if (!(await this.isPremiumUser(customerId))) {
+      throw new Error('Only premium users can create transactions');
+    }
     try {
       await this.collection.insertOne({ customerId, inventoryId, date });
       return { customerId, inventoryId, date };
@@ -46,6 +51,9 @@ class TransactionRepository {
   }
 
   async updateTransaction(id, { customerId, inventoryId, date }) {
+    if (!(await this.isPremiumUser(customerId))) {
+      throw new Error('Only premium users can update transactions');
+    }
     try {
       await this.collection.updateOne({ _id: id }, { $set: { customerId, inventoryId, date } });
       return { customerId, inventoryId, date };
@@ -56,11 +64,45 @@ class TransactionRepository {
   }
 
   async deleteTransaction(id) {
+    const transaction = await this.findTransactionById(id);
+    if (!(await this.isPremiumUser(transaction.customerId))) {
+      throw new Error('Only premium users can delete transactions');
+    }
     try {
       await this.collection.deleteOne({ _id: id });
       return `Transaction with id ${id} deleted successfully`;
     } catch (error) {
       console.error(`Error deleting transaction: ${error}`);
+      throw error;
+    }
+  }
+
+  async getUserRole(customerId) {
+    try {
+      const user = await this.usersCollection.findOne({ customerId });
+      return user.role;
+    } catch (error) {
+      console.error(`Error getting user role: ${error}`);
+      throw error;
+    }
+  }
+
+  async updateUserRole(customerId, newRole) {
+    try {
+      await this.usersCollection.updateOne({ customerId }, { $set: { role: newRole } });
+      return `User role updated successfully`;
+    } catch (error) {
+      console.error(`Error updating user role: ${error}`);
+      throw error;
+    }
+  }
+
+  async isPremiumUser(customerId) {
+    try {
+      const userRole = await this.getUserRole(customerId);
+      return userRole === 'premium';
+    } catch (error) {
+      console.error(`Error checking if user is premium: ${error}`);
       throw error;
     }
   }
