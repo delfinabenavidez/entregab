@@ -64,8 +64,7 @@ class TransactionRepository {
   }
 
   async deleteTransaction(id) {
-    const transaction = await this.findTransactionById(id);
-    if (!(await this.isPremiumUser(transaction.customerId))) {
+    if (!(await this.isPremiumUser(await this.getCustomerIdFromTransactionId(id)))) {
       throw new Error('Only premium users can delete transactions');
     }
     try {
@@ -73,6 +72,16 @@ class TransactionRepository {
       return `Transaction with id ${id} deleted successfully`;
     } catch (error) {
       console.error(`Error deleting transaction: ${error}`);
+      throw error;
+    }
+  }
+  
+  async getCustomerIdFromTransactionId(id) {
+    try {
+      const transaction = await this.findTransactionById(id);
+      return transaction.customerId;
+    } catch (error) {
+      console.error(`Error getting customer ID from transaction ID: ${error}`);
       throw error;
     }
   }
