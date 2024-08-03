@@ -4,6 +4,15 @@ const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const User = require('./models/User');
 
+passport.serializeUser((user, done) => {
+  done(null, user._id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  const user = await User.findById(id);
+  done(null, user);
+});
+
 passport.use(
   new LocalStrategy(
     {
@@ -39,3 +48,5 @@ passport.use(
     }
   )
 );
+
+module.exports = passport;

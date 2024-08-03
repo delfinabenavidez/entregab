@@ -1,6 +1,6 @@
-// models/user.model.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   age: { type: Number, required: true },
   password: { type: String, required: true },
   cartId: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart' },
-  role: { type: String, default: 'user' },
+  role: { type: String, default: 'user', enum: ['user', 'admin'] },
   documents: [
     {
       name: String,
@@ -26,15 +26,12 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-userSchema.methods.comparePassword = function(candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) return cb(err);
-    cb(null, isMatch);
-  });
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
 };
 
 userSchema.methods.generateToken = function() {
-  return bcrypt.hashSync(this.email + this.password, 10);
+  return jwt.sign({ userId: this._id, email: this.email }, process.env.SECRET_KEY, { expiresIn: '1h' });
 };
 
 userSchema.methods.addToCart = async function(productId) {

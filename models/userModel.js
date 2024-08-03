@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const Role = require('./roleModel');
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   resetPasswordToken: String,
-  resetPasswordExpires: Date
+  resetPasswordExpires: Date,
+  role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' }
 });
 
 userSchema.pre('save', async function(next) {
@@ -19,7 +21,7 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
     if (err) return cb(err);
     cb(null, isMatch);
   });
-};
+});
 
 const User = mongoose.model('User', userSchema);
 
