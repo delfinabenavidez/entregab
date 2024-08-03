@@ -33,5 +33,30 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
   });
 };
 
+userSchema.methods.generateToken = function() {
+  return bcrypt.hashSync(this.email + this.password, 10);
+};
+
+userSchema.methods.addToCart = async function(productId) {
+  const cart = await Cart.findById(this.cartId);
+  if (!cart) {
+    const newCart = new Cart({ user: this._id, products: [productId] });
+    await newCart.save();
+    this.cartId = newCart._id;
+    await this.save();
+  } else {
+    cart.products.push(productId);
+    await cart.save();
+  }
+};
+
+userSchema.methods.removeFromCart = async function(productId) {
+  const cart = await Cart.findById(this.cartId);
+  if (cart) {
+    cart.products = cart.products.filter(product => product.toString() !== productId.toString());
+    await cart.save();
+  }
+};
+
 const User = mongoose.model('User', userSchema);
 module.exports = User;

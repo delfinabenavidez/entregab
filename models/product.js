@@ -1,18 +1,31 @@
-import { createClient } from '../client.js';
+import mongoose from 'mongoose';
 
-export const getProductCollection = async () => {
-  const client = await createClient();
-  const db = client.db('mdSportsWearDatabase');
-  return db.collection('products');
-};
+const productSchema = new mongoose.Schema({
+  prodName: { type: String, required: true },
+  prodType: { type: String, required: true },
+  prodPrice: { type: Number, required: true },
+  prodColor: { type: String, required: true }
+});
+
+const Product = mongoose.model('Product', productSchema);
 
 export const createProduct = async ({ prodName, prodType, prodPrice, prodColor }) => {
-  const productCollection = await getProductCollection();
-  return await productCollection.insertOne({ prodName, prodType, prodPrice, prodColor });
+  const product = new Product({ prodName, prodType, prodPrice, prodColor });
+  return await product.save();
 };
 
 export const findProducts = async () => {
-  const productCollection = await getProductCollection();
-  const products = await productCollection.find({}).toArray();
-  return products;
+  return await Product.find({}).exec();
+};
+
+export const findProductById = async (id) => {
+  return await Product.findById(id).exec();
+};
+
+export const updateProduct = async (id, { prodName, prodType, prodPrice, prodColor }) => {
+  return await Product.findByIdAndUpdate(id, { prodName, prodType, prodPrice, prodColor }, { new: true });
+};
+
+export const deleteProduct = async (id) => {
+  return await Product.findByIdAndRemove(id);
 };

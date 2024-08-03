@@ -6,8 +6,21 @@ const errorDictionary = {
   //...
 };
 
+const logger = require('./logger'); // suponiendo que tienes un archivo logger.js
+
 module.exports = {
   errorHandler: (err, req, res, next) => {
+    logger.error(err); // registra el error
+    const error = errorDictionary[err.code] || 'Internal Server Error';
+    res.status(err.status || 500).json({ error });
+  },
+  handleSessionError: (err, req, res, next) => {
+    logger.error(err); // registra el error
+    const error = errorDictionary[err.code] || 'Internal Server Error';
+    res.status(err.status || 500).json({ error });
+  },
+  handlePurchaseError: (err, req, res, next) => {
+    logger.error(err); // registra el error
     const error = errorDictionary[err.code] || 'Internal Server Error';
     res.status(err.status || 500).json({ error });
   }
