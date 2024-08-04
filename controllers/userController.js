@@ -1,4 +1,3 @@
-// controllers/userController.js
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');

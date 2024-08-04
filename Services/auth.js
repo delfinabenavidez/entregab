@@ -2,7 +2,7 @@ const logger = require('./logger');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const User = require('./models/User');
+const User = require('./models/Users');
 
 // Configuración de Passport
 passport.use(new LocalStrategy({

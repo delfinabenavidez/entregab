@@ -6,7 +6,7 @@ const errorDictionary = {
   //...
 };
 
-const logger = require('./logger'); // suponiendo que tienes un archivo logger.js
+const logger = require('./logger'); 
 
 module.exports = {
   errorHandler: (err, req, res, next) => {
